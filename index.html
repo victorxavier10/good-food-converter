@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Conversor de Alimentos | Calculadora de Peso Cru, Cozido, Assado e Grelhado</title>
+
+    <meta name="description"
+        content="Conversor de alimentos crus e cozidos. Calcule como o peso muda entre cru, cozido, assado e grelhado e veja estimativas de calorias, proteína e carboidratos. Converta facilmente o peso de alimentos crus, cozidos, grelhados e assados. Descubra também calorias, proteínas e carboidratos por porção de frango, arroz, batata, massas e muito mais.">
+
+    <!-- SEO internacional: ajuste seudominio.com para o seu domínio real -->
+    <link rel="canonical" href="https://converter.food/">
+    <link rel="alternate" hreflang="pt-BR" href="https://converter.food/">
+    <link rel="alternate" hreflang="en" href="https://converter.food/en/">
+    <link rel="alternate" hreflang="es" href="https://converter.food/es/">
+    <link rel="alternate" hreflang="x-default" href="https://converter.food/">
+
+    <meta name="robots" content="index,follow">
+
+    <!-- Open Graph básico -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Conversor de Alimentos | Calculadora de Peso Cru e Cozido">
+    <meta property="og:description"
+        content="Converta o peso de alimentos crus, cozidos, assados e grelhados e veja estimativas de calorias, proteína e carboidratos.">
+    <meta property="og:locale" content="pt_BR">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background-color: #f1f3f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 4rem;
+        }
+
+        .lang-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .lang-tabs a {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid #dadce0;
+            text-decoration: none;
+            color: #5f6368;
+            background: #ffffff;
+        }
+
+        .lang-tabs a:hover {
+            background: #e8f0fe;
+        }
+
+        .lang-tabs a.active {
+            background: #4285f4;
+            color: #ffffff;
+            border-color: #4285f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.15), 0 4px 8px rgba(60, 64, 67, 0.15);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #5f6368;
+            margin-top: 0.5rem;
+        }
+
+        .label {
+            font-size: 0.9rem;
+            color: #5f6368;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 0.95rem 1rem 0.85rem 2.5rem;
+            border: none;
+            border-radius: 24px;
+            background-color: #f1f3f4;
+            font-size: 1rem;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        .search-wrapper img {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.65rem 2rem 0.65rem 1rem;
+            border: 1px solid #7F7F7F;
+            border-radius: 4px;
+            background-color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            appearance: none;
+            background-image: url('public/images/arrow-down.png');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px 6px;
+            color: #4287F6;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .icon-swap {
+            background-image: url('public/images/arrow-switch.png');
+            background-repeat: no-repeat;
+            background-size: 24px 16px;
+            width: 24px;
+            height: 16px;
+            cursor: pointer;
+            margin-bottom: 1.8rem;
+        }
+
+        .resultado {
+            background: #f1f3f4;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #202124;
+            min-height: 7rem;
+        }
+
+        .quantidade-wrapper {
+            position: relative;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .quantidade-wrapper input {
+            width: 100%;
+            padding: 1rem;
+            padding-right: 2.5rem;
+            background: #ffffff;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            color: #5f6368;
+            appearance: textfield;
+            outline: none;
+        }
+
+        .quantidade-wrapper .unidade {
+            position: absolute;
+            right: 3.8%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[list]::-webkit-calendar-picker-indicator {
+            display: none !important;
+            appearance: none;
+        }
+
+        select option {
+            background-color: #ffffff;
+            color: #202124;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            outline: none;
+        }
+
+        .aviso {
+            font-size: 0.7rem;
+            color: #d94d43;
+            margin-top: 0.15rem;
+            min-height: 0.2em;
+            visibility: hidden;
+        }
+
+        .seo-text {
+            max-width: 480px;
+            margin: 2rem auto 0;
+            font-size: 0.75rem;
+            color: #5f6368;
+            line-height: 1.5;
+            text-align: center;
+            padding: 0 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .seo-text h2 {
+            font-size: 0.9rem;
+            margin-top: 0;
+            color: #202124;
+        }
+
+        .nutri-linha {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #5f6368;
+            white-space: pre;
+            line-height: 1.4;
+        }
+
+        h3 {
+            font-size: 0.95rem;
+            margin: 0;
+            margin-bottom: 0.5rem;
+            color: #202124;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Abas de idioma -->
+    <nav class="lang-tabs" aria-label="Selecionar idioma">
+        <a href="/" class="active">Português</a>
+        <a href="/en/">English</a>
+        <a href="/es/">Español</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="label"></div>
+        <h1>Conversor de Alimentos</h1>
+
+        <div class="search-wrapper">
+            <img src="public/images/sg-search.png" alt="Buscar">
+            <input type="text" id="alimento" placeholder="Digitar tipo de alimento" list="alimentos">
+        </div>
+
+        <datalist id="alimentos">
+            <option value="Peito de Frango">
+            <option value="Patinho">
+            <option value="Filé Mignon">
+            <option value="Picanha">
+            <option value="Entrecot">
+            <option value="Arroz Branco">
+            <option value="Arroz Integral">
+            <option value="Batata Inglesa">
+            <option value="Purê de Batata">
+            <option value="Espaguete">
+            <option value="Macarrão Parafuso">
+            <option value="Macarrão Penne">
+            <option value="Espaguete Integral">
+            <option value="Macarrão Parafuso Integral">
+            <option value="Macarrão Sem Glúten">
+            <option value="Quinoa">
+            <option value="Lentilha">
+            <option value="Grão-de-bico">
+            <option value="Tofu">
+        </datalist>
+
+        <div class="quantidade-wrapper">
+            <input type="text" class="quantidade" id="quantidade" placeholder="Digitar quantidade em gramas"
+                inputmode="decimal" pattern="[0-9]*" />
+            <span class="unidade">g</span>
+        </div>
+
+        <div class="input-group">
+            <div style="flex: 1">
+                <select id="modoOrigem">
+                    <option value="cru">Cru</option>
+                    <option value="grelhado">Grelhado</option>
+                    <option value="cozido">Cozido</option>
+                    <option value="assado">Assado</option>
+                </select>
+                <div class="aviso" id="avisoOrigem">Preparo não disponível para esse alimento</div>
+            </div>
+            <span class="icon-swap" id="inverter" aria-label="Inverter modos"></span>
+            <div style="flex: 1">
+                <select id="modoDestino">
+                    <option value="grelhado">Grelhado</option>
+                    <option value="cru">Cru</option>
+                    <option value="cozido">Cozido</option>
+                    <option value="assado">Assado</option>
+                </select>
+                <div class="aviso" id="avisoDestino">Preparo não disponível para esse alimento</div>
+            </div>
+        </div>
+
+        <div class="label"></div>
+
+        <div class="resultado" id="resultado">Resultado</div>
+    </div>
+
+    <div class="seo-text">
+        <h2>Sobre o Conversor de Alimentos</h2>
+        <p><strong>O Conversor e Calculadora de Alimentos e Comidas</strong> é uma ferramenta online gratuita
+            desenvolvida para facilitar o <strong>controle de porções</strong> e apoiar quem busca uma
+            <strong>alimentação equilibrada</strong>. Com base em <strong>tabelas médias de cocção</strong>, você pode
+            converter gramas de alimentos entre os estados <strong>cru</strong>, <strong>cozido</strong>,
+            <strong>assado</strong> e <strong>grelhado</strong>, ajudando em dietas, marmitas, planejamentos
+            alimentares e treinos.
+        </p>
+        <p>Criado com o apoio de <strong>nutricionistas</strong>, o site utiliza <strong>fatores de conversão
+                confiáveis</strong> para carnes, grãos, massas, leguminosas e outros alimentos comuns no dia a dia. Uma
+            excelente alternativa para quem procura praticidade e rapidez na hora de preparar refeições balanceadas.
+        </p>
+        <p><strong>Aviso importante:</strong> Este site tem caráter informativo e de apoio. As conversões e valores
+            nutricionais são <strong>estimativas aproximadas</strong> e podem variar conforme o alimento, método de
+            preparo e umidade. <strong>Não substitui orientação de profissionais de saúde</strong>. Para resultados
+            personalizados, procure sempre um <strong>médico ou nutricionista</strong>.
+        </p>
+    </div>
+
+    <script>
+        // Mapeia nome exibido -> chave interna
+        const alimentos = {
+            "Peito de Frango": "peito_frango",
+            "Patinho": "patinho",
+            "Filé Mignon": "file_mignon",
+            "Picanha": "picanha",
+            "Entrecot": "entrecot",
+            "Arroz Branco": "arroz_branco",
+            "Arroz Integral": "arroz_integral",
+            "Batata Inglesa": "batata_inglesa",
+            "Purê de Batata": "pure_batata",
+            "Espaguete": "espaguete",
+            "Macarrão Parafuso": "macarrao_parafuso",
+            "Macarrão Penne": "macarrao_penne",
+            "Espaguete Integral": "espaguete_integral",
+            "Macarrão Parafuso Integral": "macarrao_parafuso_integral",
+            "Macarrão Sem Glúten": "macarrao_sem_gluten",
+            "Quinoa": "quinoa",
+            "Lentilha": "lentilha",
+            "Grão-de-bico": "grao_bico",
+            "Tofu": "tofu",
+        };
+
+        const modeLabels = {
+            cru: "Cru",
+            grelhado: "Grelhado",
+            cozido: "Cozido",
+            assado: "Assado",
+        };
+
+        const nutrientes = {
+            peito_frango: { cal: 165, prot: 31, carb: 0 },
+            patinho: { cal: 143, prot: 21, carb: 0 },
+            file_mignon: { cal: 170, prot: 26, carb: 0 },
+            picanha: { cal: 290, prot: 27, carb: 0 },
+            entrecot: { cal: 250, prot: 24, carb: 0 },
+            arroz_branco: { cal: 129, prot: 2.7, carb: 28 },
+            arroz_integral: { cal: 111, prot: 2.6, carb: 23 },
+            batata_inglesa: { cal: 86, prot: 2, carb: 20 },
+            pure_batata: { cal: 100, prot: 1.5, carb: 15 },
+            espaguete: { cal: 158, prot: 5.8, carb: 31 },
+            macarrao_parafuso: { cal: 157, prot: 5.7, carb: 30 },
+            macarrao_penne: { cal: 160, prot: 6, carb: 30 },
+            espaguete_integral: { cal: 124, prot: 5, carb: 27 },
+            macarrao_parafuso_integral: { cal: 126, prot: 5.2, carb: 25 },
+            macarrao_sem_gluten: { cal: 132, prot: 3.5, carb: 27 },
+            quinoa: { cal: 120, prot: 4.1, carb: 21 },
+            lentilha: { cal: 116, prot: 9, carb: 20 },
+            grao_bico: { cal: 164, prot: 8.9, carb: 27 },
+            tofu: { cal: 76, prot: 8, carb: 1.9 },
+        };
+
+        const fatores = {
+            peito_frango: { cru: 1, grelhado: 0.75, cozido: 0.8, assado: 0.75 },
+            patinho: { cru: 1, grelhado: 0.75, cozido: 0.8, assado: 0.75 },
+            file_mignon: { cru: 1, grelhado: 0.72, cozido: 0.78, assado: 0.7 },
+            picanha: { cru: 1, grelhado: 0.70, cozido: 0.75, assado: 0.68 },
+            entrecot: { cru: 1, grelhado: 0.70, cozido: 0.76, assado: 0.7 },
+            arroz_branco: { cru: 1, cozido: 2.5 },
+            arroz_integral: { cru: 1, cozido: 2.8 },
+            batata_inglesa: { cru: 1, cozido: 1.3, assado: 0.9 },
+            pure_batata: { cru: 1, cozido: 1.8 },
+            espaguete: { cru: 1, cozido: 2.3 },
+            macarrao_parafuso: { cru: 1, cozido: 2.4 },
+            macarrao_penne: { cru: 1, cozido: 2.35 },
+            espaguete_integral: { cru: 1, cozido: 2.5 },
+            macarrao_parafuso_integral: { cru: 1, cozido: 2.55 },
+            macarrao_sem_gluten: { cru: 1, cozido: 2.0 },
+            quinoa: { cru: 1, cozido: 2.6 },
+            lentilha: { cru: 1, cozido: 2.2 },
+            grao_bico: { cru: 1, cozido: 2.3 },
+            tofu: { cru: 1, grelhado: 0.9, assado: 0.88 },
+        };
+
+        const alimentoInput = document.getElementById('alimento');
+        const modoOrigem = document.getElementById('modoOrigem');
+        const modoDestino = document.getElementById('modoDestino');
+        const quantidadeInput = document.getElementById('quantidade');
+        const resultadoDiv = document.getElementById('resultado');
+        const inverterBtn = document.getElementById('inverter');
+
+        function calcular() {
+            const alimentoNome = alimentoInput.value.trim();
+            const key = alimentos[alimentoNome];
+            const origem = modoOrigem.value;
+            const destino = modoDestino.value;
+            const quantidade = parseFloat(quantidadeInput.value.replace(/[^\d.]/g, ''));
+
+            const avisoOrigem = document.getElementById('avisoOrigem');
+            const avisoDestino = document.getElementById('avisoDestino');
+
+            const fatorAlimento = key ? fatores[key] : null;
+
+            avisoOrigem.style.visibility = fatorAlimento && !fatorAlimento[origem] ? 'visible' : 'hidden';
+            avisoDestino.style.visibility = fatorAlimento && !fatorAlimento[destino] ? 'visible' : 'hidden';
+
+            if (!key || !fatorAlimento || isNaN(quantidade) ||
+                !fatorAlimento[origem] || !fatorAlimento[destino]) {
+                resultadoDiv.innerHTML = 'Resultado';
+                return;
+            }
+
+            const fatorOrigem = fatorAlimento[origem];
+            const fatorDestino = fatorAlimento[destino];
+
+            const valorConvertido = quantidade * fatorDestino / fatorOrigem;
+            const valorMin = Math.floor(valorConvertido * 0.95);
+            const valorMax = Math.ceil(valorConvertido * 1.05);
+
+            const destinoLabel = modeLabels[destino] || destino;
+
+            let textoPrincipal = `<h3>${valorMin}g à ${valorMax}g (${destinoLabel})</h3>`;
+            let textoNutri = '';
+
+            const infoNutri = nutrientes[key];
+            if (infoNutri) {
+                const calMin = Math.round(infoNutri.cal * valorMin / 100);
+                const calMax = Math.round(infoNutri.cal * valorMax / 100);
+                const protMin = Math.round(infoNutri.prot * valorMin / 100);
+                const protMax = Math.round(infoNutri.prot * valorMax / 100);
+                const carbMin = Math.round(infoNutri.carb * valorMin / 100);
+                const carbMax = Math.round(infoNutri.carb * valorMax / 100);
+
+                const padNum = (n) => n.toString().padStart(4, ' ');
+
+                const formatLinha = (min, max, label) => `${padNum(min)} à ${padNum(max)} ${label}`;
+
+                if (calMin !== 0 || calMax !== 0) {
+                    textoNutri += `<div class="nutri-linha">${formatLinha(calMin, calMax, 'kcal')}</div>`;
+                }
+                if (protMin !== 0 || protMax !== 0) {
+                    textoNutri += `<div class="nutri-linha">${formatLinha(protMin, protMax, 'g de proteína')}</div>`;
+                }
+                if (carbMin !== 0 || carbMax !== 0) {
+                    textoNutri += `<div class="nutri-linha">${formatLinha(carbMin, carbMax, 'g de carboidrato')}</div>`;
+                }
+            }
+
+            resultadoDiv.innerHTML = textoPrincipal + textoNutri;
+        }
+
+        alimentoInput.addEventListener('input', calcular);
+        modoOrigem.addEventListener('change', calcular);
+        modoDestino.addEventListener('change', calcular);
+        quantidadeInput.addEventListener('input', calcular);
+
+        quantidadeInput.addEventListener('keypress', (e) => {
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+
+        inverterBtn.addEventListener('click', () => {
+            const temp = modoOrigem.value;
+            modoOrigem.value = modoDestino.value;
+            modoDestino.value = temp;
+            calcular();
+        });
+    </script>
+</body>
+
+</html>

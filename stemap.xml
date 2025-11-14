@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+  <!-- Português (página principal) -->
+  <url>
+    <loc>https://converter.food/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://converter.food/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://converter.food/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://converter.food/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://converter.food/"/>
+    <lastmod>2025-11-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Inglês -->
+  <url>
+    <loc>https://converter.food/en/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://converter.food/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://converter.food/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://converter.food/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://converter.food/"/>
+    <lastmod>2025-11-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Espanhol -->
+  <url>
+    <loc>https://converter.food/es/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://converter.food/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://converter.food/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://converter.food/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://converter.food/"/>
+    <lastmod>2025-11-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>
