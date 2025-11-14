@@ -1,0 +1,41 @@
+{
+    "version": 2,
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "builds": [
+        {
+            "src": "index.html",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "en/index.html",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "es/index.html",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "public/(.*)",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "^/$",
+            "dest": "/index.html"
+        },
+        {
+            "src": "^/en/?$",
+            "dest": "/en/index.html"
+        },
+        {
+            "src": "^/es/?$",
+            "dest": "/es/index.html"
+        },
+        {
+            "src": "/public/(.*)",
+            "dest": "/public/$1"
+        }
+    ]
+}
