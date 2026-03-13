@@ -7,10 +7,10 @@
     <link rel="shortcut icon" href="/public/images/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Food Weight Converter | Raw, Cooked, Grilled & Roasted</title>
+    <title>Food Weight Converter Calculator | Raw, Cooked, Grilled & Roasted</title> 
 
     <meta name="description"
-        content="Free food weight converter to convert raw and cooked foods like chicken, rice, potatoes and pasta. Get approximate calories, protein and carbs per portion. Convert the weight of foods between raw, cooked, grilled and baked. See calories, protein and carbs for chicken, rice, potatoes, pasta and more.">
+        content="Free food weight converter calculator to convert raw and cooked foods like chicken, rice, potatoes and pasta. Get approximate calories, protein and carbs per portion. Convert the weight of foods between raw, cooked, grilled and baked. See calories, protein and carbs for chicken, rice, potatoes, pasta and more.">
 
     <link rel="canonical" href="https://converter.food/en/">
     <link rel="alternate" hreflang="pt-BR" href="https://converter.food/">
@@ -167,7 +167,7 @@
         .quantidade-wrapper input {
             width: 100%;
             padding: 1rem;
-            padding-right: 2.5rem;
+            padding-right: 5.5rem;
             background: #ffffff;
             font-size: 1rem;
             border: none;
@@ -177,14 +177,27 @@
             outline: none;
         }
 
-        .quantidade-wrapper .unidade {
+        .quantidade-wrapper .unidade-select {
             position: absolute;
-            right: 3.8%;
+            right: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
+            width: 4.25rem;
+            padding: 0.55rem 1.5rem 0.85rem 0.65rem;
+            border: none;
+            border-radius: 10px;
+            background-color: #f1f3f4;
+            background-image: url('../public/images/arrow-down.png');
+            background-repeat: no-repeat;
+            background-position: right 0.6rem center;
+            background-size: 12px 6px;
             color: #5f6368;
-            font-size: 1rem;
-            pointer-events: none;
+            font-size: 0.95rem;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
         }
 
         input[type="number"]:focus {
@@ -295,9 +308,13 @@
         </datalist>
 
         <div class="quantidade-wrapper">
-            <input type="text" class="quantidade" id="quantidade" placeholder="Enter amount in grams"
-                inputmode="decimal" pattern="[0-9]*" />
-            <span class="unidade">g</span>
+            <input type="text" class="quantidade" id="quantidade" placeholder="Enter amount" inputmode="decimal"
+                autocomplete="off" />
+            <select class="unidade-select" id="unidadeMedida" aria-label="Select measurement unit">
+                <option value="g">g</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+            </select>
         </div>
 
         <div class="input-group">
@@ -424,10 +441,53 @@
             tofu: { cru: 1, grelhado: 0.9, assado: 0.88 },
         };
 
+        const unitFactors = {
+            g: 1,
+            lb: 453.59237,
+            oz: 28.349523125,
+        };
+
+        const unitLabels = {
+            g: 'g',
+            lb: 'lb',
+            oz: 'oz',
+        };
+
+        function toGrams(value, unit) {
+            return value * (unitFactors[unit] || 1);
+        }
+
+        function fromGrams(value, unit) {
+            return value / (unitFactors[unit] || 1);
+        }
+
+        function formatWeight(value, unit) {
+            if (unit === 'g') {
+                return `${Math.round(value)}${unitLabels[unit]}`;
+            }
+
+            if (value >= 10) {
+                return `${value.toFixed(1)}${unitLabels[unit]}`;
+            }
+
+            return `${value.toFixed(2)}${unitLabels[unit]}`;
+        }
+
+        function updateQuantityPlaceholder() {
+            const placeholders = {
+                g: 'Enter amount in grams',
+                lb: 'Enter amount in pounds',
+                oz: 'Enter amount in ounces',
+            };
+
+            quantidadeInput.placeholder = placeholders[unidadeMedida.value] || 'Enter amount';
+        }
+
         const alimentoInput = document.getElementById('alimento');
         const modoOrigem = document.getElementById('modoOrigem');
         const modoDestino = document.getElementById('modoDestino');
         const quantidadeInput = document.getElementById('quantidade');
+        const unidadeMedida = document.getElementById('unidadeMedida');
         const resultadoDiv = document.getElementById('resultado');
         const inverterBtn = document.getElementById('inverter');
 
@@ -436,7 +496,13 @@
             const key = alimentos[alimentoNome];
             const origem = modoOrigem.value;
             const destino = modoDestino.value;
-            const quantidade = parseFloat(quantidadeInput.value.replace(/[^\d.]/g, ''));
+            const unidade = unidadeMedida.value;
+
+            const quantidadeNormalizada = quantidadeInput.value
+                .replace(',', '.')
+                .replace(/[^\d.]/g, '');
+
+            const quantidade = parseFloat(quantidadeNormalizada);
 
             const avisoOrigem = document.getElementById('avisoOrigem');
             const avisoDestino = document.getElementById('avisoDestino');
@@ -452,26 +518,31 @@
                 return;
             }
 
+            const quantidadeEmGramas = toGrams(quantidade, unidade);
+
             const fatorOrigem = fatorAlimento[origem];
             const fatorDestino = fatorAlimento[destino];
 
-            const valorConvertido = quantidade * fatorDestino / fatorOrigem;
-            const valorMin = Math.floor(valorConvertido * 0.95);
-            const valorMax = Math.ceil(valorConvertido * 1.05);
+            const valorConvertidoEmGramas = quantidadeEmGramas * fatorDestino / fatorOrigem;
+            const valorMinEmGramas = valorConvertidoEmGramas * 0.95;
+            const valorMaxEmGramas = valorConvertidoEmGramas * 1.05;
+
+            const valorMin = fromGrams(valorMinEmGramas, unidade);
+            const valorMax = fromGrams(valorMaxEmGramas, unidade);
 
             const destinoLabel = modeLabels[destino] || destino;
 
-            let textoPrincipal = `<h3>${valorMin}g to ${valorMax}g (${destinoLabel})</h3>`;
+            let textoPrincipal = `<h3>${formatWeight(valorMin, unidade)} to ${formatWeight(valorMax, unidade)} (${destinoLabel})</h3>`;
             let textoNutri = '';
 
             const infoNutri = nutrientes[key];
             if (infoNutri) {
-                const calMin = Math.round(infoNutri.cal * valorMin / 100);
-                const calMax = Math.round(infoNutri.cal * valorMax / 100);
-                const protMin = Math.round(infoNutri.prot * valorMin / 100);
-                const protMax = Math.round(infoNutri.prot * valorMax / 100);
-                const carbMin = Math.round(infoNutri.carb * valorMin / 100);
-                const carbMax = Math.round(infoNutri.carb * valorMax / 100);
+                const calMin = Math.round(infoNutri.cal * valorMinEmGramas / 100);
+                const calMax = Math.round(infoNutri.cal * valorMaxEmGramas / 100);
+                const protMin = Math.round(infoNutri.prot * valorMinEmGramas / 100);
+                const protMax = Math.round(infoNutri.prot * valorMaxEmGramas / 100);
+                const carbMin = Math.round(infoNutri.carb * valorMinEmGramas / 100);
+                const carbMax = Math.round(infoNutri.carb * valorMaxEmGramas / 100);
 
                 const padNum = (n) => n.toString().padStart(4, ' ');
                 const formatLine = (min, max, label) => `${padNum(min)} to ${padNum(max)} ${label}`;
@@ -494,10 +565,20 @@
         modoOrigem.addEventListener('change', calcular);
         modoDestino.addEventListener('change', calcular);
         quantidadeInput.addEventListener('input', calcular);
+        unidadeMedida.addEventListener('change', () => {
+            updateQuantityPlaceholder();
+            calcular();
+        });
 
         quantidadeInput.addEventListener('keypress', (e) => {
             const char = String.fromCharCode(e.which);
-            if (!/[0-9]/.test(char)) {
+
+            if (!/[0-9.,]/.test(char)) {
+                e.preventDefault();
+                return;
+            }
+
+            if ((char === '.' || char === ',') && /[.,]/.test(quantidadeInput.value)) {
                 e.preventDefault();
             }
         });
@@ -508,6 +589,8 @@
             modoDestino.value = temp;
             calcular();
         });
+
+        updateQuantityPlaceholder();
     </script>
 </body>
 
